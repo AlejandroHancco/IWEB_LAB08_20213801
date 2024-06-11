@@ -1,0 +1,88 @@
+
+
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.example.pruebalaboratorio1.beans.Pelicula"%>
+<%@page import="com.example.pruebalaboratorio1.beans.Genero"%>
+<%@page import="com.example.pruebalaboratorio1.beans.Streaming"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    //Job job = (Job) request.getAttribute("job");
+    ArrayList<Pelicula> lista = (ArrayList) request.getAttribute("listaPeliculas");
+    //ArrayList<genero> listaGeneros = (ArrayList) request.getAttribute("listarGeneros");
+    //ArrayList<streaming> listaStreaming = (ArrayList) request.getAttribute("listarStraming");
+    String searchTerm = request.getParameter("searchTerm");
+    NumberFormat formatter = NumberFormat.getInstance();
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Películas</title>
+</head>
+<body>
+
+<h1>Lista de Películas</h1>
+
+<div class="col-lg-3">
+    Selecciona una opción:
+    <select name="tipo" class="form-control">
+        <% ArrayList<String> opciones = (ArrayList<String>) request.getAttribute("opciones"); %>
+        <% for (String opcion : opciones) { %>
+        <option value="<%= opcion %>"><%= opcion %></option>
+        <% } %>
+    </select>
+</div>
+
+<table border="1">
+    <tr>
+
+        <th>Titulo</th>
+        <th>Director</th>
+        <th>Ano Publicacion</th>
+        <th>Rating</th>
+        <th>BoxOffice</th>
+        <th>Genero</th>
+        <th>Duracion</th>
+        <th>Streaming</th>
+        <th>Premios Oscar</th>
+        <th>Actores</th>
+        <th>Borrar</th>
+
+
+    </tr>
+    <%
+        for (Pelicula movie : lista) {
+    %>
+    <tr>
+
+        <td><a href="viewPelicula?idPelicula=<%= movie.getIdPelicula() %>"><%=movie.getTitulo()%></a></td>
+        <td><%=movie.getDirector()%></td>
+        <td><%=movie.getAnoPublicacion()%></td>
+        <td><%=movie.getRating()%>/10</td>
+        <td>$<%=formatter.format(movie.getBoxOffice())%></td>
+        <td><%=movie.getGenero().getNombre()%></td>
+        <td><%=movie.getDuracion()%></td>
+        <td><%=movie.getStreaming().getNombreServicio()%></td>
+        <td><%=movie.getPremioOscar()%></td>
+        <td><a href="viewActores?idPelicula=<%= movie.getIdPelicula() %>">Ver actores</a></td>
+
+        <% if (movie.getValidador()){ %>
+        <td> <a href="<%=request.getContextPath()%>/PeliculaServlet?action=borrar&id=<%=movie.getIdPelicula()%>">
+                Borrar</a>
+        </td>
+        <%}%>
+
+
+    </tr>
+
+    <%
+        }
+    %>
+
+</table>
+
+<a href="listaPeliculas?action=crear" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border: none; border-radius: 5px;">Crear Pelicula</a>
+
+</body>
+</html>
